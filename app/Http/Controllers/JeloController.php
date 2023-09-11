@@ -25,7 +25,7 @@ class JeloController extends Controller
 
    public function search(Request $request){
 
-        $cat = Category::all();
+   
 
         $search = $request->search;  
 
@@ -37,13 +37,17 @@ class JeloController extends Controller
         if(isset($request->diff_time)){
             $diff_time= date('Y-m-d H:i:s', $request->diff_time) ;
         }
+        if(isset($request->tags)){
+            $tags =  $request->tags;
+            print_r($tags);
+        }
 
 
 
         $jela = Jelo::where(function($query) use ($search){
             $query->where('naziv', 'like', "%$search%");
         })
-        ->orWhereHas('category', function($query) use ($search){
+        ->orWhereHas('category', function($query) use ($search) {
             $query->where('title', 'like', "%$search%");
         })
         ->get()->paginate($per_page);
